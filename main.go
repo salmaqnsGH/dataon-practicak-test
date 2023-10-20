@@ -57,6 +57,8 @@ func main() {
 	api.POST("/executive-committies/:id", executiveCommitteeHandler.CreateExecutiveCommittee)
 
 	api.GET("/divisions", divisionHandler.GetDivisions)
+	api.POST("/divisions/:id", divisionHandler.CreateDivision)
+
 	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)
 
 	router.Run()
