@@ -2,6 +2,7 @@ package main
 
 import (
 	"dataon/company"
+	"dataon/division"
 	"dataon/executiveCommittee"
 	"dataon/handler"
 	"fmt"
@@ -23,16 +24,20 @@ func main() {
 
 	fmt.Println("koneksi database berhasil!")
 
+	// company
 	companyRepository := company.NewRepository(db)
-
 	companyService := company.NewService(companyRepository)
-
 	companyHandler := handler.NewCompanyHandler(companyService)
 
 	// executiveCommittee
 	executiveCommitteeRepository := executiveCommittee.NewRepository(db)
 	executiveCommitteeService := executiveCommittee.NewService(executiveCommitteeRepository)
 	executiveCommitteeHandler := handler.NewExecutiveCommitteeHandler(executiveCommitteeService)
+
+	// division
+	divisionRepository := division.NewRepository(db)
+	divisionService := division.NewService(divisionRepository)
+	divisionHandler := handler.NewDivisionHandler(divisionService)
 
 	router := gin.Default()
 	router.Use(cors.Default())
@@ -41,6 +46,7 @@ func main() {
 
 	api.GET("/companies", companyHandler.GetCompanies)
 	api.GET("/executive-committies", executiveCommitteeHandler.GetExecutiveCommitties)
+	api.GET("/divisions", divisionHandler.GetDivisions)
 
 	router.Run()
 }
