@@ -1,18 +1,22 @@
 package suubdivision
 
+import "dataon/division"
+
 type Service interface {
 	GetSubDivisions() ([]SubDivision, error)
 	CreateSubDivision(input CreateSubDivisionInput, DivisionID int) (SubDivision, error)
 	DeleteSubDivision(subDivisionID int) error
 	UpdateSubDivision(inputID SubDivisionIDInput, inputData CreateSubDivisionInput) (SubDivision, error)
+	GetSubDivisionsByDivisionID(divisionID int) ([]SubDivisionList, error)
 }
 
 type service struct {
-	repository Repository
+	repository         Repository
+	divisionRepository division.Repository
 }
 
-func NewService(repository Repository) *service {
-	return &service{repository}
+func NewService(repository Repository, divisionRepository division.Repository) *service {
+	return &service{repository, divisionRepository}
 }
 
 func (s *service) GetSubDivisions() ([]SubDivision, error) {
@@ -60,4 +64,38 @@ func (s *service) UpdateSubDivision(inputID SubDivisionIDInput, inputData Create
 	}
 
 	return updatedSubDivision, nil
+}
+
+func (s *service) GetSubDivisionsByDivisionID(divisionID int) ([]SubDivisionList, error) {
+	division, err := s.divisionRepository.FindByID(divisionID)
+	if err != nil {
+		return nil, err
+	}
+
+	var subDivisionLists []SubDivisionList
+
+	subDivisions, err := s.repository.FindAllByDivisionID(divisionID)
+	if err != nil {
+		return subDivisionLists, err
+	}
+
+	subList := SubDivisionList{
+		DivisionID:           division.ID,
+		ExecutiveCommitteeID: division.ExecutiveCommitteeID,
+		DivisionName:         division.Name,
+		SubDivision:          []SubDivision{},
+	}
+
+	for _, subDivision := range subDivisions {
+		sub := SubDivision{
+			ID:   subDivision.ID,
+			Name: subDivision.Name,
+		}
+
+		subList.SubDivision = append(subList.SubDivision, sub)
+	}
+
+	subDivisionLists = append(subDivisionLists, subList)
+
+	return subDivisionLists, nil
 }

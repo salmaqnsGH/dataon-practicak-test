@@ -1,6 +1,10 @@
 package suubdivision
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 type Repository interface {
 	FindAll() ([]SubDivision, error)
@@ -8,6 +12,7 @@ type Repository interface {
 	Delete(subDivisionID int) error
 	FindByID(ID int) (SubDivision, error)
 	Update(subDivision SubDivision) (SubDivision, error)
+	FindAllByDivisionID(divisionID int) ([]SubDivision, error)
 }
 
 type repository struct {
@@ -67,4 +72,17 @@ func (r *repository) Update(subDivision SubDivision) (SubDivision, error) {
 	}
 
 	return subDivision, nil
+}
+
+func (r *repository) FindAllByDivisionID(divisionID int) ([]SubDivision, error) {
+	var subDivisions []SubDivision
+	err := r.db.Where("division_id = ?", divisionID).Find(&subDivisions).Error
+
+	fmt.Println(subDivisions)
+
+	if err != nil {
+		return subDivisions, err
+	}
+
+	return subDivisions, nil
 }

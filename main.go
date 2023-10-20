@@ -42,7 +42,7 @@ func main() {
 
 	// sub division
 	subDivisionRepository := subdivision.NewRepository(db)
-	subDivisionService := subdivision.NewService(subDivisionRepository)
+	subDivisionService := subdivision.NewService(subDivisionRepository, divisionRepository)
 	subDivisionHandler := handler.NewSubDivisionHandler(subDivisionService)
 
 	router := gin.Default()
@@ -60,6 +60,7 @@ func main() {
 	api.POST("/divisions/:id", divisionHandler.CreateDivision)
 
 	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)
+	api.GET("/sub-divisions-by-division_id/:division_id", subDivisionHandler.GetSubDivisionsByDivisionID)
 	api.POST("/sub-divisions/:id", subDivisionHandler.CreateSubDivision)
 	api.DELETE("/sub-divisions/:id", subDivisionHandler.DeleteSubDivision)
 	api.PUT("/sub-divisions/:id", subDivisionHandler.UpdateSubDivision)
