@@ -3,6 +3,7 @@ package handler
 import (
 	"dataon/company"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -41,4 +42,20 @@ func (h *companyHandler) CreateCompany(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, newCompany)
+}
+
+func (h *companyHandler) GetCompanyByID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	subDivisions, err := h.service.GetCompanyByID(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, subDivisions)
 }

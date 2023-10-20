@@ -1,8 +1,6 @@
 package suubdivision
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 )
 
@@ -77,8 +75,6 @@ func (r *repository) Update(subDivision SubDivision) (SubDivision, error) {
 func (r *repository) FindAllByDivisionID(divisionID int) ([]SubDivision, error) {
 	var subDivisions []SubDivision
 	err := r.db.Where("division_id = ?", divisionID).Find(&subDivisions).Error
-
-	fmt.Println(subDivisions)
 
 	if err != nil {
 		return subDivisions, err

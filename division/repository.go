@@ -6,6 +6,7 @@ type Repository interface {
 	FindAll() ([]Division, error)
 	Save(division Division) (Division, error)
 	FindByID(ID int) (Division, error)
+	FindByECID(ID int) ([]Division, error)
 }
 
 type repository struct {
@@ -40,6 +41,17 @@ func (r *repository) Save(division Division) (Division, error) {
 func (r *repository) FindByID(ID int) (Division, error) {
 	var division Division
 	err := r.db.Where("id = ?", ID).Find(&division).Error
+
+	if err != nil {
+		return division, err
+	}
+
+	return division, nil
+}
+
+func (r *repository) FindByECID(ID int) ([]Division, error) {
+	var division []Division
+	err := r.db.Where("executive_committee_id = ?", ID).Find(&division).Error
 
 	if err != nil {
 		return division, err

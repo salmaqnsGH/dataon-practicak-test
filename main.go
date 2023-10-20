@@ -25,25 +25,25 @@ func main() {
 
 	fmt.Println("koneksi database berhasil!")
 
-	// company
-	companyRepository := company.NewRepository(db)
-	companyService := company.NewService(companyRepository)
-	companyHandler := handler.NewCompanyHandler(companyService)
-
-	// executive committee
-	executiveCommitteeRepository := executiveCommittee.NewRepository(db)
-	executiveCommitteeService := executiveCommittee.NewService(executiveCommitteeRepository)
-	executiveCommitteeHandler := handler.NewExecutiveCommitteeHandler(executiveCommitteeService)
+	// sub division
+	subDivisionRepository := subdivision.NewRepository(db)
+	subDivisionService := subdivision.NewService(subDivisionRepository)
+	subDivisionHandler := handler.NewSubDivisionHandler(subDivisionService)
 
 	// division
 	divisionRepository := division.NewRepository(db)
 	divisionService := division.NewService(divisionRepository)
 	divisionHandler := handler.NewDivisionHandler(divisionService)
 
-	// sub division
-	subDivisionRepository := subdivision.NewRepository(db)
-	subDivisionService := subdivision.NewService(subDivisionRepository, divisionRepository)
-	subDivisionHandler := handler.NewSubDivisionHandler(subDivisionService)
+	// executive committee
+	executiveCommitteeRepository := executiveCommittee.NewRepository(db)
+	executiveCommitteeService := executiveCommittee.NewService(executiveCommitteeRepository)
+	executiveCommitteeHandler := handler.NewExecutiveCommitteeHandler(executiveCommitteeService)
+
+	// company
+	companyRepository := company.NewRepository(db)
+	companyService := company.NewService(companyRepository, executiveCommitteeRepository, divisionRepository, subDivisionRepository)
+	companyHandler := handler.NewCompanyHandler(companyService)
 
 	router := gin.Default()
 	router.Use(cors.Default())
@@ -51,6 +51,7 @@ func main() {
 	api := router.Group("/api/v1")
 
 	api.GET("/companies", companyHandler.GetCompanies)
+	api.GET("/companies/:id", companyHandler.GetCompanyByID)
 	api.POST("/companies", companyHandler.CreateCompany)
 
 	api.GET("/executive-committies", executiveCommitteeHandler.GetExecutiveCommitties)
@@ -60,7 +61,6 @@ func main() {
 	api.POST("/divisions/:id", divisionHandler.CreateDivision)
 
 	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)
-	api.GET("/sub-divisions-by-division_id/:division_id", subDivisionHandler.GetSubDivisionsByDivisionID)
 	api.POST("/sub-divisions/:id", subDivisionHandler.CreateSubDivision)
 	api.DELETE("/sub-divisions/:id", subDivisionHandler.DeleteSubDivision)
 	api.PUT("/sub-divisions/:id", subDivisionHandler.UpdateSubDivision)

@@ -1,10 +1,13 @@
 package company
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Repository interface {
 	FindAll() ([]Company, error)
 	Save(company Company) (Company, error)
+	FindByID(ID int) (Company, error)
 }
 
 type repository struct {
@@ -28,6 +31,17 @@ func (r *repository) FindAll() ([]Company, error) {
 
 func (r *repository) Save(company Company) (Company, error) {
 	err := r.db.Create(&company).Error
+
+	if err != nil {
+		return company, err
+	}
+
+	return company, nil
+}
+
+func (r *repository) FindByID(ID int) (Company, error) {
+	var company Company
+	err := r.db.Where("id = ?", ID).Find(&company).Error
 
 	if err != nil {
 		return company, err

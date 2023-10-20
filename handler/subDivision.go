@@ -3,7 +3,6 @@ package handler
 import (
 	subdivision "dataon/subdivision"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -89,20 +88,4 @@ func (h *subDivisionHandler) UpdateSubDivision(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, updatedSubDivision)
-}
-
-func (h *subDivisionHandler) GetSubDivisionsByDivisionID(c *gin.Context) {
-	divisionID, err := strconv.Atoi(c.Param("division_id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	subDivisions, err := h.service.GetSubDivisionsByDivisionID(divisionID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, subDivisions)
 }
