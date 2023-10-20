@@ -1,0 +1,26 @@
+package company
+
+import "gorm.io/gorm"
+
+type Repository interface {
+	FindAll() ([]Company, error)
+}
+
+type repository struct {
+	db *gorm.DB
+}
+
+func NewRepository(db *gorm.DB) *repository {
+	return &repository{db}
+}
+
+func (r *repository) FindAll() ([]Company, error) {
+	var companies []Company
+	err := r.db.Find(&companies).Error
+
+	if err != nil {
+		return companies, err
+	}
+
+	return companies, nil
+}
