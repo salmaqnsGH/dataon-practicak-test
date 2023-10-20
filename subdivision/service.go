@@ -3,6 +3,7 @@ package suubdivision
 type Service interface {
 	GetSubDivisions() ([]SubDivision, error)
 	CreateSubDivision(input CreateSubDivisionInput, DivisionID int) (SubDivision, error)
+	DeleteSubDivision(subDivisionID int) error
 }
 
 type service struct {
@@ -33,4 +34,13 @@ func (s *service) CreateSubDivision(input CreateSubDivisionInput, DivisionID int
 	}
 
 	return newSubDivision, nil
+}
+
+func (s *service) DeleteSubDivision(subDivisionID int) error {
+	err := s.repository.Delete(subDivisionID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -48,3 +48,20 @@ func (h *subDivisionHandler) CreateSubDivision(c *gin.Context) {
 
 	c.JSON(http.StatusOK, newDivision)
 }
+
+func (h *subDivisionHandler) DeleteSubDivision(c *gin.Context) {
+	var subDivisionID subdivision.SubDivisionIDInput
+	err := c.ShouldBindUri(&subDivisionID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = h.service.DeleteSubDivision(subDivisionID.ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, "Subdivision is deleted successfully")
+}

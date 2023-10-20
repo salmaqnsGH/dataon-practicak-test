@@ -5,6 +5,7 @@ import "gorm.io/gorm"
 type Repository interface {
 	FindAll() ([]SubDivision, error)
 	Save(subDivision SubDivision) (SubDivision, error)
+	Delete(subDivisionID int) error
 }
 
 type repository struct {
@@ -34,4 +35,13 @@ func (r *repository) Save(subDivision SubDivision) (SubDivision, error) {
 	}
 
 	return subDivision, nil
+}
+
+func (r *repository) Delete(subDivisionID int) error {
+	var subDivision SubDivision
+	if err := r.db.Where("id = ?", subDivisionID).First(&subDivision).Delete(&subDivision).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
