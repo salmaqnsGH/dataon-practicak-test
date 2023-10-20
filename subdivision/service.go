@@ -4,6 +4,7 @@ type Service interface {
 	GetSubDivisions() ([]SubDivision, error)
 	CreateSubDivision(input CreateSubDivisionInput, DivisionID int) (SubDivision, error)
 	DeleteSubDivision(subDivisionID int) error
+	UpdateSubDivision(inputID SubDivisionIDInput, inputData CreateSubDivisionInput) (SubDivision, error)
 }
 
 type service struct {
@@ -43,4 +44,20 @@ func (s *service) DeleteSubDivision(subDivisionID int) error {
 	}
 
 	return nil
+}
+
+func (s *service) UpdateSubDivision(inputID SubDivisionIDInput, inputData CreateSubDivisionInput) (SubDivision, error) {
+	subDivision, err := s.repository.FindByID(inputID.ID)
+	if err != nil {
+		return subDivision, err
+	}
+
+	subDivision.Name = inputData.Name
+
+	updatedSubDivision, err := s.repository.Update(subDivision)
+	if err != nil {
+		return subDivision, err
+	}
+
+	return updatedSubDivision, nil
 }

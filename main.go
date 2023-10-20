@@ -62,6 +62,7 @@ func main() {
 	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)
 	api.POST("/sub-divisions/:id", subDivisionHandler.CreateSubDivision)
 	api.DELETE("/sub-divisions/:id", subDivisionHandler.DeleteSubDivision)
+	api.PUT("/sub-divisions/:id", subDivisionHandler.UpdateSubDivision)
 
 	router.Run()
 }

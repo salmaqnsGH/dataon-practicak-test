@@ -6,6 +6,8 @@ type Repository interface {
 	FindAll() ([]SubDivision, error)
 	Save(subDivision SubDivision) (SubDivision, error)
 	Delete(subDivisionID int) error
+	FindByID(ID int) (SubDivision, error)
+	Update(subDivision SubDivision) (SubDivision, error)
 }
 
 type repository struct {
@@ -44,4 +46,25 @@ func (r *repository) Delete(subDivisionID int) error {
 	}
 
 	return nil
+}
+
+func (r *repository) FindByID(ID int) (SubDivision, error) {
+	var subDivision SubDivision
+	err := r.db.Where("id = ?", ID).Find(&subDivision).Error
+
+	if err != nil {
+		return subDivision, err
+	}
+
+	return subDivision, nil
+}
+
+func (r *repository) Update(subDivision SubDivision) (SubDivision, error) {
+	err := r.db.Save(&subDivision).Error
+
+	if err != nil {
+		return subDivision, err
+	}
+
+	return subDivision, nil
 }
