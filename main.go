@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	dsn := "host=localhost user=root password=secret dbname=organisational_structure port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	dsn := "host=localhost user=root password=secret dbname=dataon port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
@@ -51,6 +51,8 @@ func main() {
 	api := router.Group("/api/v1")
 
 	api.GET("/companies", companyHandler.GetCompanies)
+	api.POST("/companies", companyHandler.CreateCompany)
+
 	api.GET("/executive-committies", executiveCommitteeHandler.GetExecutiveCommitties)
 	api.GET("/divisions", divisionHandler.GetDivisions)
 	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)

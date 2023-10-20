@@ -24,3 +24,21 @@ func (h *companyHandler) GetCompanies(c *gin.Context) {
 
 	c.JSON(http.StatusOK, companies)
 }
+
+func (h *companyHandler) CreateCompany(c *gin.Context) {
+	var input company.CreateCompanyInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+
+	newCompany, err := h.service.CreateCompany(input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, newCompany)
+}
