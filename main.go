@@ -2,6 +2,7 @@ package main
 
 import (
 	"dataon/company"
+	"dataon/executiveCommittee"
 	"dataon/handler"
 	"fmt"
 	"log"
@@ -28,12 +29,18 @@ func main() {
 
 	companyHandler := handler.NewCompanyHandler(companyService)
 
+	// executiveCommittee
+	executiveCommitteeRepository := executiveCommittee.NewRepository(db)
+	executiveCommitteeService := executiveCommittee.NewService(executiveCommitteeRepository)
+	executiveCommitteeHandler := handler.NewExecutiveCommitteeHandler(executiveCommitteeService)
+
 	router := gin.Default()
 	router.Use(cors.Default())
 
 	api := router.Group("/api/v1")
 
 	api.GET("/companies", companyHandler.GetCompanies)
+	api.GET("/executive-committies", executiveCommitteeHandler.GetExecutiveCommitties)
 
 	router.Run()
 }
