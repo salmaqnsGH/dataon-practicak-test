@@ -24,3 +24,27 @@ func (h *subDivisionHandler) GetSubDivisions(c *gin.Context) {
 
 	c.JSON(http.StatusOK, subDivisions)
 }
+
+func (h *subDivisionHandler) CreateSubDivision(c *gin.Context) {
+	var divisionID subdivision.DivisionIDInput
+	err := c.ShouldBindUri(&divisionID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var input subdivision.CreateSubDivisionInput
+	err = c.ShouldBindJSON(&input)
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+
+	newDivision, err := h.service.CreateSubDivision(input, divisionID.ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, newDivision)
+}

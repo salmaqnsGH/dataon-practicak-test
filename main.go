@@ -60,6 +60,7 @@ func main() {
 	api.POST("/divisions/:id", divisionHandler.CreateDivision)
 
 	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)
+	api.POST("/sub-divisions/:id", subDivisionHandler.CreateSubDivision)
 
 	router.Run()
 }

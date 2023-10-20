@@ -4,6 +4,7 @@ import "gorm.io/gorm"
 
 type Repository interface {
 	FindAll() ([]SubDivision, error)
+	Save(subDivision SubDivision) (SubDivision, error)
 }
 
 type repository struct {
@@ -23,4 +24,14 @@ func (r *repository) FindAll() ([]SubDivision, error) {
 	}
 
 	return subDivisions, nil
+}
+
+func (r *repository) Save(subDivision SubDivision) (SubDivision, error) {
+	err := r.db.Create(&subDivision).Error
+
+	if err != nil {
+		return subDivision, err
+	}
+
+	return subDivision, nil
 }
