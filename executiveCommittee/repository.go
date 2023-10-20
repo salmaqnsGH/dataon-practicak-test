@@ -4,6 +4,7 @@ import "gorm.io/gorm"
 
 type Repository interface {
 	FindAll() ([]Executivecommittee, error)
+	Save(executivecommittee Executivecommittee) (Executivecommittee, error)
 }
 
 type repository struct {
@@ -23,4 +24,14 @@ func (r *repository) FindAll() ([]Executivecommittee, error) {
 	}
 
 	return Executivecommitties, nil
+}
+
+func (r *repository) Save(executivecommittee Executivecommittee) (Executivecommittee, error) {
+	err := r.db.Create(&executivecommittee).Error
+
+	if err != nil {
+		return executivecommittee, err
+	}
+
+	return executivecommittee, nil
 }

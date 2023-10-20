@@ -2,6 +2,7 @@ package executiveCommittee
 
 type Service interface {
 	GetExecutivecommitties() ([]Executivecommittee, error)
+	CreateExecutivecommittee(input CreateExecutiveCommitteeInput, companyID int) (Executivecommittee, error)
 }
 
 type service struct {
@@ -13,10 +14,23 @@ func NewService(repository Repository) *service {
 }
 
 func (s *service) GetExecutivecommitties() ([]Executivecommittee, error) {
-	Executivecommitties, err := s.repository.FindAll()
+	executivecommitties, err := s.repository.FindAll()
 	if err != nil {
-		return Executivecommitties, err
+		return executivecommitties, err
 	}
 
-	return Executivecommitties, nil
+	return executivecommitties, nil
+}
+
+func (s *service) CreateExecutivecommittee(input CreateExecutiveCommitteeInput, companyID int) (Executivecommittee, error) {
+	executivecommittee := Executivecommittee{}
+	executivecommittee.Name = input.Name
+	executivecommittee.CompanyID = companyID
+
+	newexecutivecommittee, err := s.repository.Save(executivecommittee)
+	if err != nil {
+		return newexecutivecommittee, err
+	}
+
+	return newexecutivecommittee, nil
 }

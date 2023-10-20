@@ -54,6 +54,8 @@ func main() {
 	api.POST("/companies", companyHandler.CreateCompany)
 
 	api.GET("/executive-committies", executiveCommitteeHandler.GetExecutiveCommitties)
+	api.POST("/executive-committies/:id", executiveCommitteeHandler.CreateExecutiveCommittee)
+
 	api.GET("/divisions", divisionHandler.GetDivisions)
 	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)
 
