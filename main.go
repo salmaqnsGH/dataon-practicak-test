@@ -5,6 +5,7 @@ import (
 	"dataon/division"
 	"dataon/executiveCommittee"
 	"dataon/handler"
+	subdivision "dataon/subdivision"
 	"fmt"
 	"log"
 
@@ -29,7 +30,7 @@ func main() {
 	companyService := company.NewService(companyRepository)
 	companyHandler := handler.NewCompanyHandler(companyService)
 
-	// executiveCommittee
+	// executive committee
 	executiveCommitteeRepository := executiveCommittee.NewRepository(db)
 	executiveCommitteeService := executiveCommittee.NewService(executiveCommitteeRepository)
 	executiveCommitteeHandler := handler.NewExecutiveCommitteeHandler(executiveCommitteeService)
@@ -39,6 +40,11 @@ func main() {
 	divisionService := division.NewService(divisionRepository)
 	divisionHandler := handler.NewDivisionHandler(divisionService)
 
+	// sub division
+	subDivisionRepository := subdivision.NewRepository(db)
+	subDivisionService := subdivision.NewService(subDivisionRepository)
+	subDivisionHandler := handler.NewSubDivisionHandler(subDivisionService)
+
 	router := gin.Default()
 	router.Use(cors.Default())
 
@@ -47,6 +53,7 @@ func main() {
 	api.GET("/companies", companyHandler.GetCompanies)
 	api.GET("/executive-committies", executiveCommitteeHandler.GetExecutiveCommitties)
 	api.GET("/divisions", divisionHandler.GetDivisions)
+	api.GET("/sub-divisions", subDivisionHandler.GetSubDivisions)
 
 	router.Run()
 }
